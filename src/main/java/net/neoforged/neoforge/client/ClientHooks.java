@@ -73,7 +73,6 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -160,6 +159,7 @@ import net.neoforged.neoforge.client.event.ScreenshotEvent;
 import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.client.event.ToastAddEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.event.WrapSectionBlockGetterEvent;
 import net.neoforged.neoforge.client.event.sound.PlaySoundEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -971,7 +971,7 @@ public class ClientHooks {
     public static void addAdditionalGeometry(
             List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
             Function<RenderType, VertexConsumer> getOrCreateBuilder,
-            RenderChunkRegion region,
+            BlockAndTintGetter region,
             PoseStack transformation) {
         if (additionalRenderers.isEmpty()) {
             return;
@@ -980,6 +980,17 @@ public class ClientHooks {
         for (final var renderer : additionalRenderers) {
             renderer.render(context);
         }
+    }
+
+    public static @Nullable BlockAndTintGetter wrapSectionBlockGetter(@Nullable BlockAndTintGetter region, BlockPos sectionMin, BlockPos sectionMax) {
+        if (region == null) {
+            return null;
+        }
+
+        final var event = new WrapSectionBlockGetterEvent(region, sectionMin, sectionMax);
+        NeoForge.EVENT_BUS.post(event);
+
+        return event.getGetter();
     }
 
     // Make sure the below method is only ever called once (by forge).

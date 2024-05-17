@@ -38,6 +38,15 @@
              }
  
              @Override
+@@ -572,7 +_,7 @@
+                 BlockPos blockpos = RenderSection.this.origin.immutable();
+                 BlockPos blockpos1 = blockpos.offset(15, 15, 15);
+                 VisGraph visgraph = new VisGraph();
+-                RenderChunkRegion renderchunkregion = this.region;
++                net.minecraft.world.level.BlockAndTintGetter renderchunkregion = net.neoforged.neoforge.client.ClientHooks.wrapSectionBlockGetter(this.region, blockpos, blockpos1); // Neo: weaken type and fire event for customization
+                 this.region = null;
+                 PoseStack posestack = new PoseStack();
+                 if (renderchunkregion != null) {
 @@ -606,7 +_,11 @@
                          }
  
