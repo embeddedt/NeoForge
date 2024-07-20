@@ -50,4 +50,10 @@ public abstract class BaseCapability<T, C extends @Nullable Object> {
     public final Class<C> contextClass() {
         return contextClass;
     }
+
+    /**
+     * Called after {@link RegisterCapabilitiesEvent}, to allow compacting any internal maps that may be used
+     * for storage.
+     */
+    protected void onRegistrationFinalized() {}
 }

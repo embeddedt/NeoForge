@@ -85,6 +85,11 @@ public final class ItemCapability<T, C extends @Nullable Object> extends BaseCap
 
     final Map<Item, List<ICapabilityProvider<ItemStack, C, T>>> providers = new IdentityHashMap<>();
 
+    @Override
+    protected void onRegistrationFinalized() {
+        providers.replaceAll((item, list) -> List.copyOf(list));
+    }
+
     @ApiStatus.Internal
     @Nullable
     public T getCapability(ItemStack stack, C context) {

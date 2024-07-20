@@ -47,6 +47,7 @@ public class CapabilityHooks {
 
         var event = new RegisterCapabilitiesEvent();
         ModLoader.postEventWrapContainerInModOrder(event);
+        event.registeredCapabilities.forEach(BaseCapability::onRegistrationFinalized);
 
         initFinished = true;
     }

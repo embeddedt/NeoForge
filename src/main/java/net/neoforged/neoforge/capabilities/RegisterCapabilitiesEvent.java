@@ -6,7 +6,9 @@
 package net.neoforged.neoforge.capabilities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * Fired to register capability providers at an appropriate time.
  */
 public class RegisterCapabilitiesEvent extends Event implements IModBusEvent {
+    final Set<BaseCapability<?, ?>> registeredCapabilities = new HashSet<>();
+
     RegisterCapabilitiesEvent() {}
 
     // BLOCKS
@@ -41,6 +45,8 @@ public class RegisterCapabilitiesEvent extends Event implements IModBusEvent {
         // Probably a programmer error
         if (blocks.length == 0)
             throw new IllegalArgumentException("Must register at least one block");
+
+        registeredCapabilities.add(capability);
 
         for (Block block : blocks) {
             Objects.requireNonNull(block);
@@ -65,6 +71,8 @@ public class RegisterCapabilitiesEvent extends Event implements IModBusEvent {
             return provider.getCapability((BE) blockEntity, context);
         };
 
+        registeredCapabilities.add(capability);
+
         for (Block block : blockEntityType.getValidBlocks()) {
             Objects.requireNonNull(block);
             capability.providers.computeIfAbsent(block, b -> new ArrayList<>()).add(adaptedProvider);
@@ -86,6 +94,7 @@ public class RegisterCapabilitiesEvent extends Event implements IModBusEvent {
      */
     public <T, C extends @Nullable Object, E extends Entity> void registerEntity(EntityCapability<T, C> capability, EntityType<E> entityType, ICapabilityProvider<? super E, C, T> provider) {
         Objects.requireNonNull(provider);
+        registeredCapabilities.add(capability);
         capability.providers.computeIfAbsent(entityType, et -> new ArrayList<>()).add((ICapabilityProvider<Entity, C, T>) provider);
     }
 
@@ -107,6 +116,8 @@ public class RegisterCapabilitiesEvent extends Event implements IModBusEvent {
         // Probably a programmer error
         if (items.length == 0)
             throw new IllegalArgumentException("Must register at least one item");
+
+        registeredCapabilities.add(capability);
 
         for (ItemLike itemLike : items) {
             Item item = Objects.requireNonNull(itemLike.asItem());

@@ -94,6 +94,11 @@ public final class EntityCapability<T, C extends @Nullable Object> extends BaseC
 
     final Map<EntityType<?>, List<ICapabilityProvider<Entity, C, T>>> providers = new IdentityHashMap<>();
 
+    @Override
+    protected void onRegistrationFinalized() {
+        providers.replaceAll((item, list) -> List.copyOf(list));
+    }
+
     @ApiStatus.Internal
     @Nullable
     public T getCapability(Entity entity, C context) {

@@ -136,6 +136,11 @@ public final class BlockCapability<T, C extends @Nullable Object> extends BaseCa
 
     final Map<Block, List<IBlockCapabilityProvider<T, C>>> providers = new IdentityHashMap<>();
 
+    @Override
+    protected void onRegistrationFinalized() {
+        providers.replaceAll((item, list) -> List.copyOf(list));
+    }
+
     @ApiStatus.Internal
     @Nullable
     public T getCapability(Level level, BlockPos pos, @Nullable BlockState state, @Nullable BlockEntity blockEntity, C context) {
