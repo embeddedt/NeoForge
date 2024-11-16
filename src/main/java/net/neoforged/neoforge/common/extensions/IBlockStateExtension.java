@@ -755,4 +755,11 @@ public interface IBlockStateExtension {
     default BubbleColumnDirection getBubbleColumnDirection() {
         return self().getBlock().getBubbleColumnDirection(self());
     }
+
+    /**
+     * Return true if this block should cause an adjacent face of the given fluid to not render.
+     */
+    default boolean shouldHideAdjacentFluidFace(FluidState adjacentFluid) {
+        return self().getBlock().shouldHideAdjacentFluidFace(self(), adjacentFluid);
+    }
 }

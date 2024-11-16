@@ -1019,4 +1019,8 @@ public interface IBlockExtension {
             return BubbleColumnDirection.NONE;
         }
     }
+
+    default boolean shouldHideAdjacentFluidFace(BlockState state, FluidState adjacentFluid) {
+        return state.getFluidState().getType().isSame(adjacentFluid.getType());
+    }
 }
