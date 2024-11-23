@@ -11,8 +11,8 @@
          return p_203187_.getType().isSame(p_203186_.getType());
      }
  
-+    private static boolean isNeighborStateHidingOverlay(FluidState selfState, BlockState otherState) {
-+        return otherState.shouldHideAdjacentFluidFace(selfState);
++    private static boolean isNeighborStateHidingOverlay(FluidState selfState, BlockState otherState, Direction neighborFace) {
++        return otherState.shouldHideAdjacentFluidFace(neighborFace, selfState);
 +    }
 +
      private static boolean isFaceOccludedByState(Direction p_110980_, float p_110981_, BlockState p_110983_) {
@@ -22,13 +22,13 @@
          return isFaceOccludedByState(p_110963_.getOpposite(), 1.0F, p_110962_);
      }
  
-+    @Deprecated // Neo: use overload that accepts BlockState
++    /** @deprecated Neo: use overload that accepts BlockState */
      public static boolean shouldRenderFace(FluidState p_203169_, BlockState p_203170_, Direction p_203171_, FluidState p_203172_) {
          return !isFaceOccludedBySelf(p_203170_, p_203171_) && !isNeighborSameFluid(p_203169_, p_203172_);
      }
  
-+    public static boolean shouldRenderFace(FluidState p_203169_, BlockState p_203170_, Direction p_203171_, BlockState otherState) {
-+        return !isFaceOccludedBySelf(p_203170_, p_203171_) && !isNeighborStateHidingOverlay(p_203169_, otherState);
++    public static boolean shouldRenderFace(FluidState fluidState, BlockState selfState, Direction direction, BlockState otherState) {
++        return !isFaceOccludedBySelf(selfState, direction) && !isNeighborStateHidingOverlay(fluidState, otherState, direction.getOpposite());
 +    }
 +
      public void tesselate(BlockAndTintGetter p_234370_, BlockPos p_234371_, VertexConsumer p_234372_, BlockState p_234373_, FluidState p_234374_) {
@@ -51,7 +51,7 @@
 -        boolean flag4 = shouldRenderFace(p_234374_, p_234373_, Direction.SOUTH, fluidstate3);
 -        boolean flag5 = shouldRenderFace(p_234374_, p_234373_, Direction.WEST, fluidstate4);
 -        boolean flag6 = shouldRenderFace(p_234374_, p_234373_, Direction.EAST, fluidstate5);
-+        boolean flag1 = !isNeighborStateHidingOverlay(p_234374_, blockstate1);
++        boolean flag1 = !isNeighborStateHidingOverlay(p_234374_, blockstate1, Direction.DOWN);
 +        boolean flag2 = shouldRenderFace(p_234374_, p_234373_, Direction.DOWN, blockstate) && !isFaceOccludedByNeighbor(Direction.DOWN, 0.8888889F, blockstate);
 +        boolean flag3 = shouldRenderFace(p_234374_, p_234373_, Direction.NORTH, blockstate2);
 +        boolean flag4 = shouldRenderFace(p_234374_, p_234373_, Direction.SOUTH, blockstate3);

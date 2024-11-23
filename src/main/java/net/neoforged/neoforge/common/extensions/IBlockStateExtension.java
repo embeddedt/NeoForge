@@ -757,9 +757,13 @@ public interface IBlockStateExtension {
     }
 
     /**
-     * Return true if this block should cause an adjacent face of the given fluid to not render.
+     * Determines if a fluid adjacent to the block on the given side should not be rendered.
+     * 
+     * @param selfFace      the face of this block that the fluid is adjacent to
+     * @param adjacentFluid the fluid that is touching that face
+     * @return true if this block should cause the fluid's face to not render
      */
-    default boolean shouldHideAdjacentFluidFace(FluidState adjacentFluid) {
-        return self().getBlock().shouldHideAdjacentFluidFace(self(), adjacentFluid);
+    default boolean shouldHideAdjacentFluidFace(Direction selfFace, FluidState adjacentFluid) {
+        return self().getBlock().shouldHideAdjacentFluidFace(self(), selfFace, adjacentFluid);
     }
 }
