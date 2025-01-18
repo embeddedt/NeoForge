@@ -176,12 +176,15 @@
  
      public void blockEntityChanged(BlockPos p_151544_) {
          if (this.hasChunkAt(p_151544_)) {
-@@ -935,16 +_,15 @@
+@@ -934,17 +_,18 @@
+ 
      public abstract Scoreboard getScoreboard();
  
++    private static final Direction[] NEIGHBOR_UPDATE_LIST = java.util.stream.Stream.concat(Direction.Plane.HORIZONTAL.stream(), Direction.Plane.VERTICAL.stream()).toArray(Direction[]::new);
++
      public void updateNeighbourForOutputSignal(BlockPos p_46718_, Block p_46719_) {
 -        for (Direction direction : Direction.Plane.HORIZONTAL) {
-+        for(Direction direction : Direction.values()) {
++        for (Direction direction : NEIGHBOR_UPDATE_LIST) {
              BlockPos blockpos = p_46718_.relative(direction);
              if (this.hasChunkAt(blockpos)) {
                  BlockState blockstate = this.getBlockState(blockpos);
